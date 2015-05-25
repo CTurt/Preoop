@@ -1,9 +1,9 @@
 # Preoop
 Object orientation implemented in C at compile time via the preprocessor (mostly).
 
-Object instances are allocated on the heap.
-
 Requires GCC 4.9 or above due to dependency on C11's `_Generic`.
+
+Combine with my [Exception library](https://github.com/CTurt/Exception) for [some very high level C code](https://gist.github.com/CTurt/b94b5c475f27003886ba).
 
 ## Usage
 Include `preoop.h`.
@@ -56,7 +56,7 @@ To invoke further methods on an object instance, use the `invoke` macro:
 
     invoke(myObject, doSomething);
 
-Once you are finished with your object instance, you must `free` it:
+Since object instances are allocated on the heap, you must `free` them once you have finished with them:
 
     free(myObject);
 

@@ -14,15 +14,21 @@ Y: 50
 )
 
 object {
-	int x, y;
+	int x;
+	int y;
 } foo;
 
 foo *method(foo, init) {
-	self->x = 100;
-	self->y = 50;
+	self->x = 0;
+	self->y = 0;
 	
 	// All `init` methods must return `self`
 	return self;
+}
+
+void method(foo, setPosition, int x, int y) {
+	self->x = x;
+	self->y = y;
 }
 
 void method(foo, printPosition) {
@@ -33,6 +39,7 @@ int main(void) {
 	// The `new` keyword allocates memory to the object, and calls its `init` method
 	foo *bar = new(foo);
 	
+	invoke(bar, setPosition, 50, 100);
 	invoke(bar, printPosition);
 	
 	// Objects are allocated on the heap, so must be freed when finished with

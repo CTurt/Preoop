@@ -4,6 +4,9 @@
 
 #define object typedef struct
 
+#define objectList(a, ...) _Generic((a), ##__VA_ARGS__)
+#define objectEntry(a, b) a *: b##_##a
+
 #define initCall(a) init_##a(malloc(sizeof(a)))
 #define new(a) initCall(a)
 

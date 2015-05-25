@@ -9,8 +9,8 @@ Y: 50
 #include "preoop.h"
 
 // Include all objects in this list:
-#define objects(a, b) _Generic((a),\
-	foo *: b##_foo\
+#define objects(a, b) objectList(a,\
+	objectEntry(foo, b)\
 )
 
 object {

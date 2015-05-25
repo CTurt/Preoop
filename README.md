@@ -57,3 +57,5 @@ To invoke further methods on an object instance use the `invoke` macro:
 Once you are finished with your object instance, you must `free` it:
 
     free(myObject);
+
+For a complete demonstration of Preoop, see `sample.c`.

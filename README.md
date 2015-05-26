@@ -16,31 +16,23 @@ Create an `objects` macro containing an entry for every object. Make sure all en
         objectEntry(Object3, b)\
     )
 
-Declare your objects:
+Declare your objects with `members` and `methods`:
 
-    object {
-        int a;
-    } Object1;
-    
-    object {
-        int b;
-    } Object2;
-    
-    object {
-        int c;
-    } Object3;
-
-Add methods to your objects:
-
-    void method(Object1, doSomething) {
-        self->a++;
-    }
+    object(Object1,
+        members {
+            int a;
+        }
+        
+        Object1 *method(Object1, init) {
+            return self;
+        }
+        
+        void method(Object1, doSomething) {
+            self->a++;
+        }
+    )
 
 All objects must have an `init` method which returns its `self`:
-
-    Object1 *method(Object1, init) {
-        return self;
-    }
 
 Now you can create definitions of pointers to your objects, these are known as a `Object Instance`s:
 

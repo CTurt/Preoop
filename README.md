@@ -54,6 +54,81 @@ Since object instances are allocated on the heap, you must `free` them once you 
 
 For a complete demonstration of Preoop, see `sample.c`.
 
+## Working with header and source files
+For larger projects, you should declare objects with members and method prototypes in a header file, and have the methods themselves in a source file. The object list should be stored in its own header file. For example:
+
+### objects.h:
+    #pragma once
+
+    #include "preoop.h"
+
+    #define objects(a, b) objectList(a,\
+        objectEntry(fileReader, b)\
+    )
+
+### file.h:
+    #pragma once
+
+    #include <stdio.h>
+
+    #include "objects.h"
+
+    object(fileReader,
+        members {
+            FILE *handle;
+            size_t size;
+            char *buffer;
+        };
+        
+        fileReader *method(fileReader, init, char *filename);
+    )
+
+### file.c:
+    #include "exception.h"
+
+    #include "file.h"
+
+    fileReader *method(fileReader, init, char *filename) {
+        exception(
+            enum {
+                NO_ERROR,
+                ERROR_FOPEN,
+                ERROR_MALLOC,
+                errorCount,
+            };
+            
+            char *errors[errorCount] = {
+                [ERROR_FOPEN] = "Could not open file",
+                [ERROR_MALLOC] = "Could not allocate memory",
+            };
+            
+            try() {
+                self->handle = fopen(filename, "rb");
+                if(!self->handle) throw(ERROR_FOPEN);
+                
+                fseek(self->handle, 0, SEEK_END);
+                self->size = ftell(self->handle);
+                
+                self->buffer = malloc(self->size);
+                if(!self->buffer) throw(ERROR_MALLOC);
+            }
+            
+            catch(ERROR_FOPEN || ERROR_MALLOC) {
+                printf("%s!\n", errors[e]);
+                
+                free(self);
+                return NULL;
+            }
+        );
+        
+        rewind(self->handle);
+        fread(self->buffer, self->size, 1, self->handle);
+        
+        fclose(self->handle);
+        
+        return self;
+    }
+
 ## How does it work?
 Methods are essentially functions with the addition of `self` as the first parameter, and the name of the object appended to the name of the function to avoid conflict.
 

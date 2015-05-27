@@ -89,37 +89,35 @@ For larger projects, you should declare objects with members and method prototyp
     #include "file.h"
 
     fileReader *method(fileReader, init, char *filename) {
-        exception(
-            enum {
-                NO_ERROR,
-                ERROR_FOPEN,
-                ERROR_MALLOC,
-                errorCount,
-            };
-            
-            char *errors[errorCount] = {
-                [ERROR_FOPEN] = "Could not open file",
-                [ERROR_MALLOC] = "Could not allocate memory",
-            };
-            
-            try() {
-                self->handle = fopen(filename, "rb");
-                if(!self->handle) throw(ERROR_FOPEN);
-                
-                fseek(self->handle, 0, SEEK_END);
-                self->size = ftell(self->handle);
-                
-                self->buffer = malloc(self->size);
-                if(!self->buffer) throw(ERROR_MALLOC);
-            }
-            
-            catch(ERROR_FOPEN || ERROR_MALLOC) {
-                printf("%s!\n", errors[e]);
-                
-                free(self);
-                return NULL;
-            }
-        );
+		enum {
+			NO_ERROR,
+			ERROR_FOPEN,
+			ERROR_MALLOC,
+			errorCount,
+		};
+		
+		char *errors[errorCount] = {
+			[ERROR_FOPEN] = "Could not open file",
+			[ERROR_MALLOC] = "Could not allocate memory",
+		};
+		
+		try(
+			self->handle = fopen(filename, "rb");
+			if(!self->handle) throw(ERROR_FOPEN);
+			
+			fseek(self->handle, 0, SEEK_END);
+			self->size = ftell(self->handle);
+			
+			self->buffer = malloc(self->size);
+			if(!self->buffer) throw(ERROR_MALLOC);
+		);
+		
+		catch(ERROR_FOPEN || ERROR_MALLOC) {
+			printf("%s!\n", errors[e]);
+			
+			free(self);
+			return NULL;
+		}
         
         rewind(self->handle);
         fread(self->buffer, self->size, 1, self->handle);
